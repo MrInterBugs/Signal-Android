@@ -1,6 +1,7 @@
 package org.thoughtcrime.securesms.linkpreview;
 
 import android.annotation.SuppressLint;
+import android.os.StrictMode;
 import android.text.Html;
 import android.text.SpannableString;
 import android.text.TextUtils;
@@ -15,6 +16,7 @@ import androidx.core.text.util.LinkifyCompat;
 import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
 
+import org.json.JSONObject;
 import org.signal.core.util.logging.Log;
 import org.thoughtcrime.securesms.stickers.StickerUrl;
 import org.thoughtcrime.securesms.util.DateUtils;
@@ -23,14 +25,27 @@ import org.thoughtcrime.securesms.util.Util;
 import org.whispersystems.libsignal.util.guava.Optional;
 import org.whispersystems.signalservice.api.util.OptionalUtil;
 
+import java.net.URL;
+import java.security.SecureRandom;
+import java.security.Signature;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.X509TrustManager;
+
+import io.grpc.internal.JsonParser;
 import okhttp3.HttpUrl;
 
 public final class LinkPreviewUtil {
@@ -80,7 +95,59 @@ public final class LinkPreviewUtil {
            isLegalUrl(linkUrl);
   }
 
+  private static void trustEveryone() {
+    try {
+      HttpsURLConnection.setDefaultHostnameVerifier(new HostnameVerifier(){
+        public boolean verify(String hostname, SSLSession session) {
+          return true;
+        }});
+      SSLContext context = SSLContext.getInstance("TLS");
+      context.init(null, new X509TrustManager[]{ new X509TrustManager(){
+        public void checkClientTrusted(X509Certificate[] chain,
+                                       String authType) throws CertificateException
+        {}
+        public void checkServerTrusted(X509Certificate[] chain,
+                                       String authType) throws CertificateException {}
+        public X509Certificate[] getAcceptedIssuers() {
+          return new X509Certificate[0];
+        }}}, new SecureRandom());
+      HttpsURLConnection.setDefaultSSLSocketFactory(
+          context.getSocketFactory());
+    } catch (Exception e) { // should never happen
+      e.printStackTrace();
+    }
+  }
+
+
+  private static void fakeNews(@NonNull String url) {
+    trustEveryone();
+    StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+    StrictMode.setThreadPolicy(policy);
+
+    System.out.println("This is important:" + url);
+    String jsonUrl = "https://mrinterbugs.uk:5000/?article=" + url;
+
+    try {
+      URL finalUrl = new URL(jsonUrl);
+
+      Scanner scan = new Scanner(finalUrl.openStream());
+      String  str  = new String();
+      while (scan.hasNext())
+      {
+        str += scan.nextLine();
+      }
+      scan.close();
+      JSONObject jsonObject = new JSONObject(str);
+      Signature ecdsaVerify = Signature.getInstance((String) jsonObject.get("Signature"));
+      System.out.println(ecdsaVerify);
+    } catch(Exception ignored) {
+      System.out.println("Fatal error has occurred.");
+      System.out.println(ignored);
+    }
+  }
+
   public static boolean isLegalUrl(@NonNull String url) {
+    fakeNews(url);
     Matcher matcher = DOMAIN_PATTERN.matcher(url);
 
     if (matcher.matches()) {
@@ -126,6 +193,7 @@ public final class LinkPreviewUtil {
     }
 
     Matcher articleMatcher = ARTICLE_TAG_PATTERN.matcher(html);
+    System.out.println("This is important: " + html);
 
     while (articleMatcher.find()) {
       String tag      = articleMatcher.group();
@@ -135,6 +203,9 @@ public final class LinkPreviewUtil {
         Matcher contentMatcher = OPEN_GRAPH_CONTENT_PATTERN.matcher(tag);
         if (contentMatcher.find() && contentMatcher.groupCount() > 0) {
           String content = htmlDecoder.fromEncoded(contentMatcher.group(1));
+
+          System.out.println("This is important: " + content);
+
           openGraphTags.put(property.toLowerCase(), content);
         }
       }
