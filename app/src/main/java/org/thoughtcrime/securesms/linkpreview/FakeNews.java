@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import org.json.JSONObject;
 
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.security.KeyFactory;
 import java.security.PublicKey;
 import java.security.SecureRandom;
@@ -52,8 +53,8 @@ public class FakeNews {
       scan.close();
 
       JSONObject jsonObject  = new JSONObject(tempResult);
-      byte[] ecdsaVerify = (byte[]) jsonObject.get("Signature");
-      Signature dsa = Signature.getInstance("SHA1withECDSA");
+      String ecdsaVerifyString = (String) jsonObject.get("Signature");
+      Signature dsa = Signature.getInstance("ECDSA");
       
 
       String publisher = (String) jsonObject.get("Publisher");
@@ -66,7 +67,7 @@ public class FakeNews {
       System.out.println(publicKey);
 
       dsa.initVerify(publicKey);
-      dsa.verify(ecdsaVerify);
+      dsa.verify(ecdsaVerifyString.getBytes(StandardCharsets.UTF_8));
 
 
     } catch(Exception e) {
