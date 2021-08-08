@@ -7,10 +7,13 @@ import androidx.annotation.NonNull;
 import org.json.JSONObject;
 
 import java.net.URL;
+import java.security.KeyFactory;
+import java.security.PublicKey;
 import java.security.SecureRandom;
 import java.security.Signature;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.security.spec.X509EncodedKeySpec;
 import java.util.Scanner;
 
 import javax.net.ssl.HostnameVerifier;
@@ -63,6 +66,10 @@ public class FakeNews {
         tempResult += scan.nextLine();
       }
       scan.close();
+      System.out.println(tempResult);
+
+      byte[]    bytes     = tempResult.getBytes();
+      PublicKey publicKey = KeyFactory.getInstance("EC").generatePublic(new X509EncodedKeySpec(bytes));
 
     } catch(Exception e) {
       System.out.println("Fatal error has occurred.");
