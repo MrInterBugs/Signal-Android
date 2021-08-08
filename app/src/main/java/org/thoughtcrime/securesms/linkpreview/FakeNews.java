@@ -52,7 +52,8 @@ public class FakeNews {
       scan.close();
 
       JSONObject jsonObject  = new JSONObject(tempResult);
-      String ecdsaVerifyString = (String) jsonObject.get("Signature");
+      byte[] ecdsaVerify = (byte[]) jsonObject.get("Signature");
+      Signature dsa = Signature.getInstance("SHA1withECDSA");
       
 
       String publisher = (String) jsonObject.get("Publisher");
@@ -64,20 +65,14 @@ public class FakeNews {
       PublicKey publicKey = KeyFactory.getInstance("EC").generatePublic(new X509EncodedKeySpec(keyBytes));
       System.out.println(publicKey);
 
+      dsa.initVerify(publicKey);
+      dsa.verify(ecdsaVerify);
+
+
     } catch(Exception e) {
       System.out.println("Fatal error has occurred.");
       System.out.println(e);
     }
-  }
-
-  public static byte[] hexStringToByteArray(String s) {
-    int len = s.length();
-    byte[] data = new byte[len / 2];
-    for (int i = 0; i < len; i += 2) {
-      data[i / 2] = (byte) ((Character.digit(s.charAt(i), 16) << 4)
-                            + Character.digit(s.charAt(i+1), 16));
-    }
-    return data;
   }
 
   /**
