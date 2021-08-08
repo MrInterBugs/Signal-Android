@@ -7,14 +7,15 @@ import androidx.annotation.NonNull;
 import org.json.JSONObject;
 
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.security.KeyFactory;
 import java.security.PublicKey;
 import java.security.SecureRandom;
 import java.security.Signature;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.security.spec.EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
+import java.util.Base64;
 import java.util.Scanner;
 
 import javax.net.ssl.HostnameVerifier;
@@ -22,8 +23,6 @@ import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSession;
 import javax.net.ssl.X509TrustManager;
-
-import ezvcard.util.IOUtils;
 
 /**
  * Used to check the news source and weather or not it is impostor content.
@@ -46,6 +45,7 @@ public class FakeNews {
 
       Scanner scan = new Scanner(finalUrl.openStream());
       String  tempResult  = new String();
+
       while (scan.hasNext())
       {
         tempResult += scan.nextLine();
@@ -54,21 +54,28 @@ public class FakeNews {
 
       JSONObject jsonObject  = new JSONObject(tempResult);
       String ecdsaVerifyString = (String) jsonObject.get("Signature");
-      Signature dsa = Signature.getInstance("ECDSA");
-      
 
       String publisher = (String) jsonObject.get("Publisher");
       System.out.println(publisher);
       String publicUrl = "https://mrinterbugs.uk:5000/publickey?publisher=" + publisher;
 
       URL finalPublicUrl = new URL(publicUrl);
-      byte[] keyBytes = IOUtils.toByteArray(finalPublicUrl.openStream());
-      PublicKey publicKey = KeyFactory.getInstance("EC").generatePublic(new X509EncodedKeySpec(keyBytes));
+
+      scan = new Scanner(finalPublicUrl.openStream());
+      tempResult  = scan.nextLine();
+      scan.close();
+
+      EncodedKeySpec publicKeySpec = new X509EncodedKeySpec(Base64.getDecoder().decode(tempResult));
+      KeyFactory keyFactory = KeyFactory.getInstance("EC");
+      PublicKey publicKey = keyFactory.generatePublic(publicKeySpec);
+
       System.out.println(publicKey);
 
+      Signature dsa = Signature.getInstance("SHA256withECDSA");
       dsa.initVerify(publicKey);
-      dsa.verify(ecdsaVerifyString.getBytes(StandardCharsets.UTF_8));
-
+      dsa.update(url.getBytes("UTF-8"));
+      boolean result = dsa.verify(Base64.getDecoder().decode(ecdsaVerifyString));
+      System.out.println(result);
 
     } catch(Exception e) {
       System.out.println("Fatal error has occurred.");
