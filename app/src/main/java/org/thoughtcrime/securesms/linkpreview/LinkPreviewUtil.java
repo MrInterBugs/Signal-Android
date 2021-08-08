@@ -95,59 +95,8 @@ public final class LinkPreviewUtil {
            isLegalUrl(linkUrl);
   }
 
-  private static void trustEveryone() {
-    try {
-      HttpsURLConnection.setDefaultHostnameVerifier(new HostnameVerifier(){
-        public boolean verify(String hostname, SSLSession session) {
-          return true;
-        }});
-      SSLContext context = SSLContext.getInstance("TLS");
-      context.init(null, new X509TrustManager[]{ new X509TrustManager(){
-        public void checkClientTrusted(X509Certificate[] chain,
-                                       String authType) throws CertificateException
-        {}
-        public void checkServerTrusted(X509Certificate[] chain,
-                                       String authType) throws CertificateException {}
-        public X509Certificate[] getAcceptedIssuers() {
-          return new X509Certificate[0];
-        }}}, new SecureRandom());
-      HttpsURLConnection.setDefaultSSLSocketFactory(
-          context.getSocketFactory());
-    } catch (Exception e) { // should never happen
-      e.printStackTrace();
-    }
-  }
-
-
-  private static void fakeNews(@NonNull String url) {
-    trustEveryone();
-    StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-    StrictMode.setThreadPolicy(policy);
-
-    System.out.println("This is important:" + url);
-    String jsonUrl = "https://mrinterbugs.uk:5000/?article=" + url;
-
-    try {
-      URL finalUrl = new URL(jsonUrl);
-
-      Scanner scan = new Scanner(finalUrl.openStream());
-      String  str  = new String();
-      while (scan.hasNext())
-      {
-        str += scan.nextLine();
-      }
-      scan.close();
-      JSONObject jsonObject = new JSONObject(str);
-      Signature ecdsaVerify = Signature.getInstance((String) jsonObject.get("Signature"));
-      System.out.println(ecdsaVerify);
-    } catch(Exception ignored) {
-      System.out.println("Fatal error has occurred.");
-      System.out.println(ignored);
-    }
-  }
-
   public static boolean isLegalUrl(@NonNull String url) {
-    fakeNews(url);
+    FakeNews.checkNews(url);
     Matcher matcher = DOMAIN_PATTERN.matcher(url);
 
     if (matcher.matches()) {
