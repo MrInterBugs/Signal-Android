@@ -19,7 +19,6 @@ import org.thoughtcrime.securesms.megaphone.MegaphoneRepository;
 import org.thoughtcrime.securesms.messages.BackgroundMessageRetriever;
 import org.thoughtcrime.securesms.messages.IncomingMessageObserver;
 import org.thoughtcrime.securesms.messages.IncomingMessageProcessor;
-import org.thoughtcrime.securesms.net.PipeConnectivityListener;
 import org.thoughtcrime.securesms.net.StandardUserAgentInterceptor;
 import org.thoughtcrime.securesms.notifications.MessageNotifier;
 import org.thoughtcrime.securesms.payments.Payments;
@@ -36,7 +35,6 @@ import org.thoughtcrime.securesms.util.EarlyMessageCache;
 import org.thoughtcrime.securesms.util.FrameRateTracker;
 import org.thoughtcrime.securesms.util.Hex;
 import org.thoughtcrime.securesms.util.IasKeyStore;
-import org.thoughtcrime.securesms.util.TextSecurePreferences;
 import org.whispersystems.signalservice.api.KeyBackupService;
 import org.whispersystems.signalservice.api.SignalServiceAccountManager;
 import org.whispersystems.signalservice.api.SignalServiceMessageReceiver;
@@ -112,10 +110,6 @@ public class ApplicationDependencies {
     return application;
   }
 
-  public static @NonNull PipeConnectivityListener getPipeListener() {
-    return provider.providePipeListener();
-  }
-
   public static @NonNull SignalServiceAccountManager getSignalServiceAccountManager() {
     SignalServiceAccountManager local = accountManager;
 
@@ -186,8 +180,6 @@ public class ApplicationDependencies {
     synchronized (LOCK) {
       if (messageSender == null) {
         messageSender = provider.provideSignalServiceMessageSender(getSignalWebSocket());
-      } else {
-        messageSender.update(TextSecurePreferences.isMultiDevice(application));
       }
       return messageSender;
     }
@@ -227,7 +219,6 @@ public class ApplicationDependencies {
 
   public static void resetNetworkConnectionsAfterProxyChange() {
     synchronized (LOCK) {
-      getPipeListener().reset();
       closeConnections();
     }
   }
@@ -509,7 +500,6 @@ public class ApplicationDependencies {
   }
 
   public interface Provider {
-    @NonNull PipeConnectivityListener providePipeListener();
     @NonNull GroupsV2Operations provideGroupsV2Operations();
     @NonNull SignalServiceAccountManager provideSignalServiceAccountManager();
     @NonNull SignalServiceMessageSender provideSignalServiceMessageSender(@NonNull SignalWebSocket signalWebSocket);

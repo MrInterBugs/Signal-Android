@@ -207,6 +207,11 @@
   <string name="ConversationActivity_attachment_exceeds_size_limits">Lampiran melebihi batas ukuran untuk tipe pesan yang Anda kirimkan.</string>
   <string name="ConversationActivity_unable_to_record_audio">Tidak bisa merekam audio!</string>
   <string name="ConversationActivity_you_cant_send_messages_to_this_group">Anda tidak dapat mengirim pesan kepada grup ini karena Anda sudah bukan anggota.</string>
+  <string name="ConversationActivity_only_s_can_send_messages">Hanya %1$s yang dapat mengirimkan pesan.</string>
+  <string name="ConversationActivity_admins">admin</string>
+  <string name="ConversationActivity_message_an_admin">Kirimkan pesan ke admin</string>
+  <string name="ConversationActivity_cant_start_group_call">Tidak dapat memulai panggilan grup</string>
+  <string name="ConversationActivity_only_admins_of_this_group_can_start_a_call">Hanya admin grup ini yang dapat memulai panggilan.</string>
   <string name="ConversationActivity_there_is_no_app_available_to_handle_this_link_on_your_device">Tidak ada aplikasi tersedia untuk menangani tautan ini pada perangkat Anda</string>
   <string name="ConversationActivity_your_request_to_join_has_been_sent_to_the_group_admin">Permintaan Anda untuk bergabung telah terkirim kepada admin grup. Anda akan diberitahu saat mereka meresponnya.</string>
   <string name="ConversationActivity_cancel_request">Batalkan Permintaan</string>
@@ -328,6 +333,7 @@
   <string name="ChooseBackupFragment__icon_content_description">Pulihkan dari ikon cadangan</string>
   <string name="ChooseBackupFragment__choose_backup">pilih cadangan</string>
   <string name="ChooseBackupFragment__learn_more">Pelajari lebih lanjut</string>
+  <string name="ChooseBackupFragment__no_file_browser_available">Tidak ada pengelola berkas tersedia</string>
   <!--RestoreBackupFragment-->
   <string name="RestoreBackupFragment__restore_complete">Pemulihan selesai</string>
   <string name="RestoreBackupFragment__to_continue_using_backups_please_choose_a_folder">Untuk lanjut menggunakan cadangan; mohon pilih sebuah folder. Cadangan baru akan tersimpan di lokasi ini.</string>
@@ -404,6 +410,7 @@
   <!--ShareActivity-->
   <string name="ShareActivity_share_with">Berbagi dengan</string>
   <string name="ShareActivity_multiple_attachments_are_only_supported">Lampiran jamak hanya berupa gambar dan video</string>
+  <string name="ShareActivity_you_do_not_have_permission_to_send_to_this_group">Anda tidak memiliki izin untuk mengirim ke grup ini</string>
   <!--GcmRefreshJob-->
   <string name="GcmRefreshJob_Permanent_Signal_communication_failure">Kegagalan komunikasi Signal permanen!</string>
   <string name="GcmRefreshJob_Signal_was_unable_to_register_with_Google_Play_Services">Signal tidak dapat melakukan registrasi melalui Google Play Services. Fitur Signal seperti pesan dan panggilan dinonaktifkan, mohon registrasi ulang melalui Pengaturan &gt; Lanjutan.</string>
@@ -531,6 +538,7 @@
   <!--AddMembersActivity-->
   <string name="AddMembersActivity__done">Selesai</string>
   <string name="AddMembersActivity__this_person_cant_be_added_to_legacy_groups">Pengguna ini tidak dapat ditambahkan ke grup lama.</string>
+  <string name="AddMembersActivity__this_person_cant_be_added_to_announcement_groups">Orang ini tidak dapat ditambahkan ke grup pemberitahuan.</string>
   <plurals name="AddMembersActivity__add_d_members_to_s">
     <item quantity="other">Tambahkan %3$d anggota ke \"%2$s\"?</item>
   </plurals>
@@ -595,6 +603,7 @@
   <string name="ManageGroupActivity_only_admins_can_reset_the_sharable_group_link">Hanya admin yang dapat mengatur ulang tautan grup yang dapat dibagikan.</string>
   <string name="ManageGroupActivity_you_dont_have_the_rights_to_do_this">Anda tidak memiliki hak untuk melakukan hal ini</string>
   <string name="ManageGroupActivity_not_capable">Seseorang yang Anda tambahkan belum menunjang fitur grup baru dan perlu memperbarui Signal</string>
+  <string name="ManageGroupActivity_not_announcement_capable">Seseorang yang Anda tambahkan tidak dapat membuka grup pemberitahuan dan perlu memperbarui Signal.</string>
   <string name="ManageGroupActivity_failed_to_update_the_group">Gagal untuk memperbarui grup</string>
   <string name="ManageGroupActivity_youre_not_a_member_of_the_group">Anda bukan member grup ini</string>
   <string name="ManageGroupActivity_failed_to_update_the_group_please_retry_later">Gagal memperbarui grup mohon coba lagi nanti</string>
@@ -930,6 +939,13 @@
   <string name="MessageRecord_you_changed_who_can_edit_group_membership_to_s">Anda mengganti siapa yang dapat mengubah keanggotaan grup menjadi \"%1$s\".</string>
   <string name="MessageRecord_s_changed_who_can_edit_group_membership_to_s">%1$s memberikan akses untuk mengubah keanggotaan grup kepada \"%2$s\".</string>
   <string name="MessageRecord_who_can_edit_group_membership_has_been_changed_to_s">Anggota yang dapat menyunting keanggotaan grup berubah menjadi \"%1$s\".</string>
+  <!--GV2 announcement group change-->
+  <string name="MessageRecord_you_allow_all_members_to_send">Anda mengubah pengaturan grup mengizinkan semua anggota untuk mengirimkan pesan.</string>
+  <string name="MessageRecord_you_allow_only_admins_to_send">Anda mengubah pengaturan grup hanya mengizinkan admin untuk mengirimkan pesan.</string>
+  <string name="MessageRecord_s_allow_all_members_to_send">%1$s mengubah pengaturan grup untuk mengizinkan semua pengguna untuk mengirimkan pesan.</string>
+  <string name="MessageRecord_s_allow_only_admins_to_send">%1$s mengubah pengaturan grup hanya mengizinkan admin untuk mengirimkan pesan.</string>
+  <string name="MessageRecord_allow_all_members_to_send">Pengaturan grup telah diubah mengizinkan semua anggota untuk mengirimkan pesan.</string>
+  <string name="MessageRecord_allow_only_admins_to_send">Pengaturan grup telah diubah hanya mengizinkan admin untuk mengirimkan pesan.</string>
   <!--GV2 group link invite access level change-->
   <string name="MessageRecord_you_turned_on_the_group_link_with_admin_approval_off">Anda menyalakan tautan grup tanpa persetujuan admin.</string>
   <string name="MessageRecord_you_turned_on_the_group_link_with_admin_approval_on">Anda menyalakan tautan grup dengan persetujuan admin.</string>
@@ -1158,6 +1174,7 @@
   <string name="CallParticipantView__cant_receive_audio_and_video_from_s">Tidak dapat menerima audio dan video dari %1$s</string>
   <string name="CallParticipantView__this_may_be_Because_they_have_not_verified_your_safety_number_change">Ini mungkin terjadi karena mereka belum memverifikasi pergantian nomor keamanan, ada masalah dengan perangkat, atau mereka memblokir Anda.</string>
   <!--CallToastPopupWindow-->
+  <string name="CallToastPopupWindow__swipe_to_view_screen_share">Usap untuk melihat layar yang dibagikan</string>
   <!--ProxyBottomSheetFragment-->
   <string name="ProxyBottomSheetFragment_proxy_server">Peladen proksi</string>
   <string name="ProxyBottomSheetFragment_proxy_address">Alamat proksi</string>
@@ -1672,8 +1689,8 @@ Menerima pesan pertukaran kunci untuk versi protokol yang tidak valid.
   <string name="prompt_mms_activity__to_send_media_and_group_messages_tap_ok">Untuk mengirim pesan media dan pesan grup, ketuk \'OK\' dan selesaikan pengaturan yang diminta. Pengaturan MMS untuk operator Anda biasanya dapat ditemukan dengan mencari \'APN operator Anda\'. Anda hanya perlu melakukan ini sekali saja.</string>
   <!--BadDecryptLearnMoreDialog-->
   <string name="BadDecryptLearnMoreDialog_delivery_issue">Masalah Pengiriman</string>
-  <string name="BadDecryptLearnMoreDialog_couldnt_be_delivered_individual">Sebuah pesan, stiker, reaksi, atau tanda pesan terbaca tidak dapat Anda terima dari %s. Mereka mungkin mencoba mengirimkannya secara langsung, atau di dalam grup.</string>
-  <string name="BadDecryptLearnMoreDialog_couldnt_be_delivered_group">Sebuah pesan, stiker, reaksi, atau tanda pesan terbaca tidak dapat Anda terima dari %s.</string>
+  <string name="BadDecryptLearnMoreDialog_couldnt_be_delivered_individual">Sebuah pesan, stiker, tanggapan, atau tanda pesan terbaca tidak dapat Anda terima dari %s. Mereka mungkin mencoba mengirimkannya secara langsung, atau di dalam grup.</string>
+  <string name="BadDecryptLearnMoreDialog_couldnt_be_delivered_group">Sebuah pesan, stiker, tanggapan, atau tanda pesan terbaca tidak dapat Anda terima dari %s.</string>
   <!--profile_create_activity-->
   <string name="CreateProfileActivity_first_name_required">Nama depan (diperlukan)</string>
   <string name="CreateProfileActivity_last_name_optional">Nama belakang (opsional)</string>
@@ -2056,7 +2073,7 @@ Menerima pesan pertukaran kunci untuk versi protokol yang tidak valid.
   <string name="PaymentsDetailsFragment__information">Detil transaksi termasuk jumlah pembayaran dan waktu dari transaksi adalah bagian dari Ledger MobileCoin.</string>
   <string name="PaymentsDetailsFragment__no_details_available">Tidak ada detail lebih untuk transaksi ini</string>
   <string name="PaymentsDetailsFragment__sent_payment">Kirim pembayaran</string>
-  <string name="PaymentsDetailsFragment__received_payment">Pembauaran diterima</string>
+  <string name="PaymentsDetailsFragment__received_payment">Pembayaran diterima</string>
   <string name="PaymentsDeatilsFragment__payment_completed_s">Pembayaran selesai %1$s</string>
   <string name="PaymentsDetailsFragment__block_number">Blokir nomor</string>
   <!--PaymentsTransferFragment-->
@@ -2108,6 +2125,7 @@ Menerima pesan pertukaran kunci untuk versi protokol yang tidak valid.
   <string name="ConfirmPayment__processing_payment">Memproses pembayaran…</string>
   <string name="ConfirmPayment__payment_complete">Pembayaran selesai</string>
   <string name="ConfirmPayment__payment_failed">Pembayaran gagal</string>
+  <string name="ConfirmPayment__payment_will_continue_processing">Pembayaran akan dilanjutkan untuk diproses</string>
   <string name="ConfirmPaymentFragment__invalid_recipient">Penerima tidak valid</string>
   <string name="ConfirmPaymentFragment__this_person_has_not_activated_payments">Orang ini belum mengaktifkan pembayaran</string>
   <string name="ConfirmPaymentFragment__unable_to_request_a_network_fee">Tidak dapat meminta biaya jaringan. Untuk melanjutkan pembayaran ini ketuk oke untuk mencoba lagi.</string>
@@ -2444,6 +2462,7 @@ Menerima pesan pertukaran kunci untuk versi protokol yang tidak valid.
   <string name="NewDeviceTransferInstructions__tap_transfer_account_and_then_continue_on_both_devices">Ketuk \"Transfer Akun\" dan kemudian \"Lanjutkan\" pada kedua perangkat</string>
   <!--NewDeviceTransferSetupFragment-->
   <string name="NewDeviceTransferSetup__preparing_to_connect_to_old_android_device">Menyiapkan untuk menghubungkan ke perangkat Android lama…</string>
+  <string name="NewDeviceTransferSetup__take_a_moment_should_be_ready_soon">Sedang dalam proses, akan siap segera</string>
   <string name="NewDeviceTransferSetup__waiting_for_old_device_to_connect">Menunggu perangkat Android lama tersambung…</string>
   <string name="NewDeviceTransferSetup__signal_needs_the_location_permission_to_discover_and_connect_with_your_old_device">Signal memerlukan akses ke perijinan lokasi untuk menemukan dan menyambungkan dengan perangkat Android lama Anda.</string>
   <string name="NewDeviceTransferSetup__signal_needs_location_services_enabled_to_discover_and_connect_with_your_old_device">Signal memerluhkan layanan lokasi diaktifkan untuk menemukan dan menyambungkan dengan perangkat Android lama Anda.</string>
@@ -2525,6 +2544,10 @@ Menerima pesan pertukaran kunci untuk versi protokol yang tidak valid.
   <string name="NewDeviceTransferComplete__continue_registration">Lanjutkan pendaftaran</string>
   <!--DeviceToDeviceTransferService-->
   <string name="DeviceToDeviceTransferService_content_title">Transfer akun</string>
+  <string name="DeviceToDeviceTransferService_status_ready">Bersiap untuk menghubungkan ke perangkat Android lain Anda…</string>
+  <string name="DeviceToDeviceTransferService_status_starting_up">Bersiap untuk menghubungkan ke perangkat Android lain Anda…</string>
+  <string name="DeviceToDeviceTransferService_status_discovery">Mencari perangkat Android lain Anda…</string>
+  <string name="DeviceToDeviceTransferService_status_network_connected">Menghubungkan ke perangkat Android lain Anda…</string>
   <string name="DeviceToDeviceTransferService_status_verification_required">Verifikasi dibutuhkan</string>
   <string name="DeviceToDeviceTransferService_status_service_connected">Mentransfer akun…</string>
   <!--OldDeviceTransferLockedDialog-->
@@ -2534,6 +2557,8 @@ Menerima pesan pertukaran kunci untuk versi protokol yang tidak valid.
   <string name="OldDeviceTransferLockedDialog__cancel_and_activate_this_device">Batalkan dan aktifkan perangkat ini</string>
   <!--AdvancedPreferenceFragment-->
   <string name="AdvancedPreferenceFragment__transfer_mob_balance">Transfer saldo MOB?</string>
+  <string name="AdvancedPreferenceFragment__you_have_a_balance_of_s">Anda memiliki saldo sebesar %1$s. Jika Anda tidak mentransfernya ke alamat wallet lain sebelum menghapus akun, Anda akan kehilangan selamanya.</string>
+  <string name="AdvancedPreferenceFragment__dont_transfer">Jangan transfer</string>
   <string name="AdvancedPreferenceFragment__transfer">Pindahkan</string>
   <!--RecipientBottomSheet-->
   <string name="RecipientBottomSheet_block">Blokir</string>
@@ -2697,15 +2722,20 @@ Menerima pesan pertukaran kunci untuk versi protokol yang tidak valid.
   <string name="payment_info_card_mobilecoin_is_a_new_privacy_focused_digital_currency">MobileCoin adalah mata uang digital yang berfokus pada privasi.</string>
   <string name="payment_info_card_adding_funds">Menambahkan dana</string>
   <string name="payment_info_card_you_can_add_funds_for_use_in">Anda dapat menambahkan dana untuk digunakan di Signal dengan mengirimkan MobileCoin ke alamat wallet Anda.</string>
+  <string name="payment_info_card_cashing_out">Menarik saldo</string>
+  <string name="payment_info_card_you_can_cash_out_mobilecoin">Anda dapat menarik saldo MobileCoin kapan saja pada layanan exchange yang mendukung MobileCoin. Hanya dengan melakukan transfer ke akun Anda di exchange tersebut.</string>
+  <string name="payment_info_card_hide_this_card">Sembunyikan kartu ini?</string>
   <string name="payment_info_card_hide">Sembunyikan</string>
   <string name="payment_info_card_record_recovery_phrase">Rekam frasa pemulihan</string>
   <string name="payment_info_card_your_recovery_phrase_gives_you">Frasa pemulihan Anda memberikan cara lain untuk Anda memulihkan akun pembayaran Anda.</string>
   <string name="payment_info_card_record_your_phrase">Rekam frasa Anda</string>
   <string name="payment_info_card_update_your_pin">Perbarui PIN Anda</string>
+  <string name="payment_info_card_with_a_high_balance">Dengan saldo yang tinggi, Anda mungkin ingin memperbarui PIN alfanumerik untuk menambah perlindungan tambahan atas akun Anda.</string>
   <string name="payment_info_card_update_pin">Perbarui PIN</string>
   <!--DeactivateWalletFragment-->
   <string name="DeactivateWalletFragment__deactivate_wallet">Nonaktifkan Wallet</string>
   <string name="DeactivateWalletFragment__your_balance">Saldo Anda</string>
+  <string name="DeactivateWalletFragment__its_recommended_that_you">Anda direkomendasikan untuk mentransfer dana Anda ke alamat wallet lain sebelum menonaktifkan pembayaran. Jika Anda memilih untuk tidak mentransfernya sekarang, dana Anda akan tetap di wallet yang tersambung ke Signal jika Anda mengaktifkan kembali pembayaran.</string>
   <string name="DeactivateWalletFragment__transfer_remaining_balance">Transfer saldo yang tersisa</string>
   <string name="DeactivateWalletFragment__deactivate_without_transferring">Nonaktifkan tanpa transfer</string>
   <string name="DeactivateWalletFragment__deactivate">Nonaktifkan</string>
@@ -2734,6 +2764,7 @@ Menerima pesan pertukaran kunci untuk versi protokol yang tidak valid.
   <string name="PaymentsRecoveryPhraseFragment__your_recovery_phrase">Frasa pemulihan Anda</string>
   <string name="PaymentsRecoveryPhraseFragment__write_down_the_following_d_words">Tuliskan %1$d kata-kata berikut secara berurutan. Simpan di tempat yang aman.</string>
   <string name="PaymentsRecoveryPhraseFragment__make_sure_youve_entered">Pastikan Anda memasukkan frasa secara benar.</string>
+  <string name="PaymentsRecoveryPhraseFragment__do_not_screenshot_or_send_by_email">Jangan lakukan tangkapan layara atau mengirimkannya dengan surel.</string>
   <string name="PaymentsRecoveryPhraseFragment__payments_account_restored">Akun pembayaran dipulihkan.</string>
   <string name="PaymentsRecoveryPhraseFragment__invalid_recovery_phrase">Frasa pemulihan tidak valid</string>
   <string name="PaymentsRecoveryPhraseFragment__make_sure_youve_entered_your_phrase_correctly_and_try_again">Pastikan Anda memasukkan frasa Anda secara benar dan coba lagi.</string>
@@ -2819,6 +2850,7 @@ Menerima pesan pertukaran kunci untuk versi protokol yang tidak valid.
   <string name="ExpireTimerSettingsFragment__1_hour">1 jam</string>
   <string name="ExpireTimerSettingsFragment__5_minutes">5 menit</string>
   <string name="ExpireTimerSettingsFragment__30_seconds">30 detik</string>
+  <string name="ExpireTimerSettingsFragment__custom_time">Waktu kustom</string>
   <string name="ExpireTimerSettingsFragment__set">Atur</string>
   <string name="ExpireTimerSettingsFragment__save">Simpan</string>
   <string name="CustomExpireTimerSelectorView__seconds">detik</string>
@@ -2849,6 +2881,10 @@ Menerima pesan pertukaran kunci untuk versi protokol yang tidak valid.
   </plurals>
   <string name="ChatColorSelectionFragment__delete_chat_color">Hapus warna percakapan?</string>
   <!--CustomChatColorCreatorFragment-->
+  <string name="CustomChatColorCreatorFragment__solid">Solid</string>
+  <string name="CustomChatColorCreatorFragment__gradient">Gradasi</string>
+  <string name="CustomChatColorCreatorFragment__hue">Warna</string>
+  <string name="CustomChatColorCreatorFragment__saturation">Saturasi</string>
   <!--CustomChatColorCreatorFragmentPage-->
   <string name="CustomChatColorCreatorFragmentPage__save">Simpan</string>
   <string name="CustomChatColorCreatorFragmentPage__edit_color">Sunting warna</string>
@@ -2856,10 +2892,18 @@ Menerima pesan pertukaran kunci untuk versi protokol yang tidak valid.
     <item quantity="other">Warna ini digunakan di %1$d percakapan. Apakah anda ingin menyimpan perubahan untuk semua percakapan?</item>
   </plurals>
   <!--ChatColorGradientTool-->
+  <string name="ChatColorGradientTool_top_edge_selector">Pemilih pojok atas</string>
+  <string name="ChatColorGradientTool_bottom_edge_selector">Pemilih pojok bawah</string>
   <!--EditReactionsFragment-->
+  <string name="EditReactionsFragment__customize_reactions">Kustomisasi tanggapan</string>
+  <string name="EditReactionsFragment__tap_to_replace_an_emoji">Ketuk untuk mengganti emoji</string>
   <string name="EditReactionsFragment__reset">Atur ulang</string>
   <string name="EditReactionsFragment_save">Simpan</string>
+  <string name="ChatColorSelectionFragment__auto_matches_the_color_to_the_wallpaper">Cocokan warna dengan gambar latar secara otomatis</string>
+  <string name="CustomChatColorCreatorFragment__drag_to_change_the_direction_of_the_gradient">Geser untuk mengubah arah gradasi warna</string>
   <!--ChatColorsMegaphone-->
+  <string name="ChatColorsMegaphone__new_chat_colors">Warna Percakapan Baru</string>
+  <string name="ChatColorsMegaphone__we_switched_up_chat_colors">Kami mengaktifkan warna percakapan untuk membeikan Anda pilihan lebih dan membuat percakapan lebih mudah dibaca.</string>
   <string name="ChatColorsMegaphone__appearance">Penampilan</string>
   <string name="ChatColorsMegaphone__not_now">Nanti saja</string>
   <!--AddAProfilePhotoMegaphone-->
@@ -2917,17 +2961,22 @@ Menerima pesan pertukaran kunci untuk versi protokol yang tidak valid.
   <!--PermissionsSettingsFragment-->
   <string name="PermissionsSettingsFragment__add_members">Tambahkan anggota</string>
   <string name="PermissionsSettingsFragment__edit_group_info">Sunting informasi grup</string>
+  <string name="PermissionsSettingsFragment__send_messages">Kirim pesan</string>
   <string name="PermissionsSettingsFragment__all_members">Semua anggota</string>
   <string name="PermissionsSettingsFragment__only_admins">Khusus para admin</string>
   <string name="PermissionsSettingsFragment__who_can_add_new_members">Siapa yang dapat menambahkan anggota baru?</string>
   <string name="PermissionsSettingsFragment__who_can_edit_this_groups_info">Siapa yang dapat menyunting informasi grup?</string>
+  <string name="PermissionsSettingsFragment__who_can_send_messages">Siapa yang dapat mengirimkan pesan?</string>
   <!--SoundsAndNotificationsSettingsFragment-->
   <string name="SoundsAndNotificationsSettingsFragment__mute_notifications">Senyapkan pemberitahuan</string>
   <string name="SoundsAndNotificationsSettingsFragment__not_muted">Tidak Senyap</string>
   <string name="SoundsAndNotificationsSettingsFragment__muted_until_s">Disenyapkan sampai %1$s</string>
   <string name="SoundsAndNotificationsSettingsFragment__mentions">Menyebut</string>
+  <string name="SoundsAndNotificationsSettingsFragment__always_notify">Selalu berikan notifikasi</string>
+  <string name="SoundsAndNotificationsSettingsFragment__do_not_notify">Jangan berikan notifikasi</string>
   <string name="SoundsAndNotificationsSettingsFragment__custom_notifications">Notifikasi khusus</string>
   <!--StickerKeyboard-->
+  <string name="StickerKeyboard__recently_used">Terakhir digunakan</string>
   <!--PlaybackSpeedToggleTextView-->
   <string name="PlaybackSpeedToggleTextView__p5x">.5x</string>
   <string name="PlaybackSpeedToggleTextView__1x">1x</string>
@@ -2940,6 +2989,11 @@ Menerima pesan pertukaran kunci untuk versi protokol yang tidak valid.
   <string name="ContactFilterView__search_name_or_number">Cari nama atau nomor</string>
   <!--VoiceNotePlayerView-->
   <string name="VoiceNotePlayerView__s_dot_s">%1$s . %2$s</string>
+  <string name="VoiceNotePlayerView__stop_voice_message">Hentikan pesan suara</string>
+  <string name="VoiceNotePlayerView__change_voice_message_speed">Ubah kecepatan pesan suara</string>
+  <string name="VoiceNotePlayerView__pause_voice_message">Jeda pesan suara</string>
+  <string name="VoiceNotePlayerView__play_voice_message">Mainkan pesan suara</string>
+  <string name="VoiceNotePlayerView__navigate_to_voice_message">Arahkan ke pesan suara</string>
   <!--AvatarPickerFragment-->
   <string name="AvatarPickerFragment__avatar_preview">Pratinjau avatar</string>
   <string name="AvatarPickerFragment__camera">Kamera</string>
@@ -2958,8 +3012,11 @@ Menerima pesan pertukaran kunci untuk versi protokol yang tidak valid.
   <string name="TextAvatarCreationFragment__text">Teks</string>
   <string name="TextAvatarCreationFragment__color">Warna</string>
   <!--VectorAvatarCreationFragment-->
+  <string name="VectorAvatarCreationFragment__select_a_color">Pilih warna</string>
   <!--ContactSelectionListItem-->
   <string name="ContactSelectionListItem__sms">SMS</string>
   <string name="ContactSelectionListItem__dot_s">· %1$s</string>
+  <!--DSLSettingsToolbar-->
+  <string name="DSLSettingsToolbar__navigate_up">Arahkan ke atas</string>
   <!--EOF-->
 </resources>

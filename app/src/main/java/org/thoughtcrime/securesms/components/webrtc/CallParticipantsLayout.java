@@ -34,6 +34,7 @@ public class CallParticipantsLayout extends FlexboxLayout {
   private CallParticipant       focusedParticipant = null;
   private boolean               shouldRenderInPip;
   private boolean               isPortrait;
+  private LayoutStrategy        layoutStrategy;
 
   public CallParticipantsLayout(@NonNull Context context) {
     super(context);
@@ -47,11 +48,18 @@ public class CallParticipantsLayout extends FlexboxLayout {
     super(context, attrs, defStyleAttr);
   }
 
-  void update(@NonNull List<CallParticipant> callParticipants, @NonNull CallParticipant focusedParticipant, boolean shouldRenderInPip, boolean isPortrait) {
+  void update(@NonNull List<CallParticipant> callParticipants,
+              @NonNull CallParticipant focusedParticipant,
+              boolean shouldRenderInPip,
+              boolean isPortrait,
+              @NonNull LayoutStrategy layoutStrategy)
+  {
     this.callParticipants   = callParticipants;
     this.focusedParticipant = focusedParticipant;
     this.shouldRenderInPip  = shouldRenderInPip;
     this.isPortrait         = isPortrait;
+    this.layoutStrategy     = layoutStrategy;
+    setFlexDirection(layoutStrategy.getFlexDirection());
     updateLayout();
   }
 
@@ -107,11 +115,7 @@ public class CallParticipantsLayout extends FlexboxLayout {
 
     callParticipantView.setCallParticipant(participant);
     callParticipantView.setRenderInPip(shouldRenderInPip);
-    if (participant.isScreenSharing()) {
-      callParticipantView.setScalingType(RendererCommon.ScalingType.SCALE_ASPECT_FIT);
-    } else {
-      callParticipantView.setScalingType(isPortrait || count < 3 ? RendererCommon.ScalingType.SCALE_ASPECT_FILL : RendererCommon.ScalingType.SCALE_ASPECT_BALANCED);
-    }
+    layoutStrategy.setChildScaling(participant, callParticipantView, isPortrait, count);
 
     if (count > 1) {
       view.setPadding(MULTIPLE_PARTICIPANT_SPACING, MULTIPLE_PARTICIPANT_SPACING, MULTIPLE_PARTICIPANT_SPACING, MULTIPLE_PARTICIPANT_SPACING);
@@ -127,7 +131,7 @@ public class CallParticipantsLayout extends FlexboxLayout {
       callParticipantView.useLargeAvatar();
     }
 
-    setChildLayoutParams(view, index, getChildCount());
+    layoutStrategy.setChildLayoutParams(view, index, getChildCount());
   }
 
   private void addCallParticipantView() {
@@ -139,17 +143,14 @@ public class CallParticipantsLayout extends FlexboxLayout {
     addView(view);
   }
 
-  private void setChildLayoutParams(@NonNull View child, int childPosition, int childCount) {
-    FlexboxLayout.LayoutParams params = (FlexboxLayout.LayoutParams) child.getLayoutParams();
-    if (childCount < 3) {
-      params.setFlexBasisPercent(1f);
-    } else {
-      if ((childCount % 2) != 0 && childPosition == childCount - 1) {
-        params.setFlexBasisPercent(1f);
-      } else {
-        params.setFlexBasisPercent(0.5f);
-      }
-    }
-    child.setLayoutParams(params);
+  public interface LayoutStrategy {
+    int getFlexDirection();
+
+    void setChildScaling(@NonNull CallParticipant callParticipant,
+                         @NonNull CallParticipantView callParticipantView,
+                         boolean isPortrait,
+                         int childCount);
+
+    void setChildLayoutParams(@NonNull View child, int childPosition, int childCount);
   }
 }

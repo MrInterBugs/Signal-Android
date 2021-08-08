@@ -207,6 +207,8 @@
   <string name="ConversationActivity_attachment_exceeds_size_limits">Tệp đính kèm vượt quá giới hạn kích cỡ cho loại tin nhắn mà bạn đang gửi.</string>
   <string name="ConversationActivity_unable_to_record_audio">Không thể ghi âm!</string>
   <string name="ConversationActivity_you_cant_send_messages_to_this_group">Bạn không thể nhắn tin cho nhóm này vì bạn không còn là thành viên.</string>
+  <string name="ConversationActivity_admins">người quản trị</string>
+  <string name="ConversationActivity_only_admins_of_this_group_can_start_a_call">Chỉ có người quản trị của nhóm mới có thể bắt đầu cuộc gọi.</string>
   <string name="ConversationActivity_there_is_no_app_available_to_handle_this_link_on_your_device">Không ứng dụng nào trên điện thoại bạn có thể xử lí liên kết này.</string>
   <string name="ConversationActivity_your_request_to_join_has_been_sent_to_the_group_admin">Yêu cầu tham gia nhóm của bạn đã được gửi tới quản trị viên nhóm. Bạn sẽ được thông báo khi họ đưa ra quyết định.</string>
   <string name="ConversationActivity_cancel_request">Hủy yêu cầu</string>
@@ -929,6 +931,11 @@
   <string name="MessageRecord_you_changed_who_can_edit_group_membership_to_s">Bạn đã đổi những người có quyền quản lí thành viên thành \"%1$s\".</string>
   <string name="MessageRecord_s_changed_who_can_edit_group_membership_to_s">%1$s đã đổi những người có quyền quản lí thành viên thành \"%2$s\".</string>
   <string name="MessageRecord_who_can_edit_group_membership_has_been_changed_to_s">Những người có quyền quản lí thành viên đã được sửa thành \"%1$s\".</string>
+  <!--GV2 announcement group change-->
+  <string name="MessageRecord_you_allow_all_members_to_send">Bạn đã thay đổi cài đặt nhóm để cho phép tất cả thành viên gửi tin nhắn.</string>
+  <string name="MessageRecord_you_allow_only_admins_to_send">Bạn đã thay đổi cài đặt nhóm để chỉ cho phép người quản trị gửi tin nhắn.</string>
+  <string name="MessageRecord_allow_all_members_to_send">Cài đặt nhóm được thay đổi để cho phép tất cả thành viên được gửi tin nhắn.</string>
+  <string name="MessageRecord_allow_only_admins_to_send">Cài đặt nhóm đã được thay đổi để chỉ cho phép người quản trị gửi tin nhắn.</string>
   <!--GV2 group link invite access level change-->
   <string name="MessageRecord_you_turned_on_the_group_link_with_admin_approval_off">Bạn đã bật đường dẫn nhóm không yêu cầu quản trị viên xét duyệt.</string>
   <string name="MessageRecord_you_turned_on_the_group_link_with_admin_approval_on">Bạn đã bật đường dẫn nhóm bắt buộc quản trị viên xét duyệt.</string>
@@ -2980,5 +2987,6 @@ Nhận thông tin trao đổi mã khóa về phiên bản giao thức không h�
   <!--ContactSelectionListItem-->
   <string name="ContactSelectionListItem__sms">SMS</string>
   <string name="ContactSelectionListItem__dot_s">. %1$s</string>
+  <!--DSLSettingsToolbar-->
   <!--EOF-->
 </resources>

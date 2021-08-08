@@ -78,8 +78,10 @@ public final class FeatureFlags {
   private static final String MEDIA_QUALITY_LEVELS              = "android.mediaQuality.levels";
   private static final String RETRY_RECEIPT_LIFESPAN            = "android.retryReceiptLifespan";
   private static final String RETRY_RESPOND_MAX_AGE             = "android.retryRespondMaxAge";
-  private static final String SENDER_KEY                        = "android.senderKey.3";
+  private static final String SENDER_KEY                        = "android.senderKey.4";
+  private static final String RETRY_RECEIPTS                    = "android.retryReceipts";
   private static final String SUGGEST_SMS_BLACKLIST             = "android.suggestSmsBlacklist";
+  private static final String ANNOUNCEMENT_GROUPS               = "android.announcementGroups";
 
   /**
    * We will only store remote values for flags in this set. If you want a flag to be controllable
@@ -113,7 +115,9 @@ public final class FeatureFlags {
       RETRY_RECEIPT_LIFESPAN,
       RETRY_RESPOND_MAX_AGE,
       SENDER_KEY,
-      SUGGEST_SMS_BLACKLIST
+      RETRY_RECEIPTS,
+      SUGGEST_SMS_BLACKLIST,
+      ANNOUNCEMENT_GROUPS
   );
 
   @VisibleForTesting
@@ -160,7 +164,9 @@ public final class FeatureFlags {
       MEDIA_QUALITY_LEVELS,
       RETRY_RECEIPT_LIFESPAN,
       RETRY_RESPOND_MAX_AGE,
-      SUGGEST_SMS_BLACKLIST
+      SUGGEST_SMS_BLACKLIST,
+      RETRY_RECEIPTS,
+      SENDER_KEY
   );
 
   /**
@@ -347,6 +353,11 @@ public final class FeatureFlags {
     return getString(MEDIA_QUALITY_LEVELS, "");
   }
 
+  /** Whether or not sending or responding to retry receipts is enabled. */
+  public static boolean retryReceipts() {
+    return getBoolean(RETRY_RECEIPTS, false);
+  }
+
   /** How long to wait before considering a retry to be a failure. */
   public static long retryReceiptLifespan() {
     return getLong(RETRY_RECEIPT_LIFESPAN, TimeUnit.HOURS.toMillis(1));
@@ -360,6 +371,11 @@ public final class FeatureFlags {
   /** Whether or not sending using sender key is enabled. */
   public static boolean senderKey() {
     return getBoolean(SENDER_KEY, false);
+  }
+
+  /** Whether or not showing the announcement group setting in the UI is enabled . */
+  public static boolean announcementGroups() {
+    return getBoolean(ANNOUNCEMENT_GROUPS, false);
   }
 
   /** A comma-delimited list of country codes that should not be told about SMS during onboarding. */
