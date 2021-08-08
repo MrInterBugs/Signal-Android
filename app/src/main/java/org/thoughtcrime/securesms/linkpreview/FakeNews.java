@@ -22,6 +22,8 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSession;
 import javax.net.ssl.X509TrustManager;
 
+import ezvcard.util.IOUtils;
+
 /**
  * Used to check the news source and weather or not it is impostor content.
  */
@@ -59,17 +61,8 @@ public class FakeNews {
       String publicUrl = "https://mrinterbugs.uk:5000/publickey?publisher=" + publisher;
 
       URL finalPublicUrl = new URL(publicUrl);
-      scan = new Scanner(finalPublicUrl.openStream());
-      tempResult  = new String();
-      while (scan.hasNext())
-      {
-        tempResult += scan.nextLine();
-      }
-      scan.close();
-      System.out.println(tempResult);
-
-      byte[]    bytes     = tempResult.getBytes();
-      PublicKey publicKey = KeyFactory.getInstance("EC").generatePublic(new X509EncodedKeySpec(bytes));
+      byte[] keyBytes = IOUtils.toByteArray(finalPublicUrl.openStream());
+      PublicKey publicKey = KeyFactory.getInstance("EC").generatePublic(new X509EncodedKeySpec(keyBytes));
 
     } catch(Exception e) {
       System.out.println("Fatal error has occurred.");
