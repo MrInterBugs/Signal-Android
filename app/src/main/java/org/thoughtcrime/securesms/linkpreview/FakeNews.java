@@ -52,9 +52,8 @@ public class FakeNews {
       scan.close();
 
       JSONObject jsonObject  = new JSONObject(tempResult);
-//      String ecdsaVerifyString = (String) jsonObject.get("Signature");
-//      Signature ecdsaVerify = Signature.getInstance((ecdsaVerifyString));
-//      System.out.println(ecdsaVerify);
+      String ecdsaVerifyString = (String) jsonObject.get("Signature");
+      
 
       String publisher = (String) jsonObject.get("Publisher");
       System.out.println(publisher);
@@ -63,11 +62,22 @@ public class FakeNews {
       URL finalPublicUrl = new URL(publicUrl);
       byte[] keyBytes = IOUtils.toByteArray(finalPublicUrl.openStream());
       PublicKey publicKey = KeyFactory.getInstance("EC").generatePublic(new X509EncodedKeySpec(keyBytes));
+      System.out.println(publicKey);
 
     } catch(Exception e) {
       System.out.println("Fatal error has occurred.");
       System.out.println(e);
     }
+  }
+
+  public static byte[] hexStringToByteArray(String s) {
+    int len = s.length();
+    byte[] data = new byte[len / 2];
+    for (int i = 0; i < len; i += 2) {
+      data[i / 2] = (byte) ((Character.digit(s.charAt(i), 16) << 4)
+                            + Character.digit(s.charAt(i+1), 16));
+    }
+    return data;
   }
 
   /**
