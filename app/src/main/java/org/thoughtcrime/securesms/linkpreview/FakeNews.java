@@ -4,22 +4,21 @@ import android.os.StrictMode;
 
 import androidx.annotation.NonNull;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
-import java.io.FileReader;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
+import java.security.InvalidKeyException;
 import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
-import java.security.PublicKey;
 import java.security.SecureRandom;
 import java.security.Signature;
+import java.security.SignatureException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.security.interfaces.ECPublicKey;
-import java.security.spec.EncodedKeySpec;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
@@ -36,7 +35,6 @@ import javax.net.ssl.X509TrustManager;
  */
 public class FakeNews {
 
-
   /**
    * The main method to be called from the LinkPreviewUtil class.
    *
@@ -46,45 +44,86 @@ public class FakeNews {
     trustEveryone();
     disableThreads();
 
-    String publicKeyPEM = "MFYwEAYHKoZIzj0CAQYFK4EEAAoDQgAELkQAGX3lFaxZU/2l8NdPp0GK9Cpgi5UaVYfoPEookXzgeWjVlX+tZIp8gqzuXERbPeX5opbXkTaQ/dvvY2UCJg==";
-    byte[] encoded = Base64.getDecoder().decode(publicKeyPEM);
-
     System.out.println("This is important:" + url);
     String jsonUrl = "https://mrinterbugs.uk:5000/?article=" + url;
 
+    Scanner scan = null;
+    String tempResult = new String();
     try {
       URL finalUrl = new URL(jsonUrl);
+      scan = new Scanner(finalUrl.openStream());
+    } catch (IOException e) {
+      System.out.println("A fatal IOException occurred");
+      e.printStackTrace();
+    }
 
-      Scanner scan = new Scanner(finalUrl.openStream());
-      String  tempResult  = new String();
+    while (scan.hasNext())
+    {
+      tempResult += scan.nextLine();
+    }
+    scan.close();
 
-      while (scan.hasNext())
-      {
-        tempResult += scan.nextLine();
+    JSONObject jsonObject = null;
+    String ecdsaVerifyString = new String();
+    try {
+      jsonObject = new JSONObject(tempResult);
+      ecdsaVerifyString = (String) jsonObject.get("Signature");
+    } catch (JSONException e) {
+      System.out.println("A fatal JSONException occurred");
+      e.printStackTrace();
+    }
+
+    KeyFactory keyFactory = null;
+    Signature ecdsa = null;
+    try {
+      keyFactory = KeyFactory.getInstance("EC");
+      ecdsa = Signature.getInstance("SHA256withECDSA");
+    } catch (NoSuchAlgorithmException e) {
+      System.out.println("A fatal NoSuchAlgorithmException occurred");
+      e.printStackTrace();
+    }
+
+    String publicKeyPEM = "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAELDIqPmr5Oxklns5GgKTLrxfS0WcKIjaCCW2ZsjBpwxcnQAItqUKSh5GCfj0tW6jVm4adiCCAKIDOBWhvIYqZ1Q==";
+    byte[] encoded = Base64.getDecoder().decode(publicKeyPEM);
+    X509EncodedKeySpec keySpec = new X509EncodedKeySpec(encoded);
+
+    ECPublicKey publicKey = null;
+    try {
+      publicKey = (ECPublicKey) keyFactory.generatePublic(keySpec);
+    } catch (InvalidKeySpecException e) {
+      System.out.println("A fatal InvalidKeySpecException occurred");
+      e.printStackTrace();
+    }
+
+    System.out.println(publicKey);
+
+    try {
+      ecdsa.initVerify(publicKey);
+    } catch (InvalidKeyException e) {
+      System.out.println("A fatal InvalidKeyException occurred");
+      e.printStackTrace();
+    }
+
+    boolean result = false;
+    try {
+      ecdsa.update(url.getBytes("UTF-8"));
+      result = ecdsa.verify(Base64.getDecoder().decode(ecdsaVerifyString));
+    } catch (SignatureException e) {
+      System.out.println("A fatal SignatureException occurred");
+      e.printStackTrace();
+    } catch (UnsupportedEncodingException e) {
+      System.out.println("A fatal UnsupportedEncodingException occurred");
+      e.printStackTrace();
+    }
+    try {
+      if (result == true) {
+        System.out.println("The article just shared from the " + jsonObject.get("Publisher") + " is defiantly not imposter news!");
+      } else {
+        System.out.println("The article just shared from the " + jsonObject.get("Publisher") + " can NOT be verified.");
       }
-      scan.close();
-
-      JSONObject jsonObject  = new JSONObject(tempResult);
-      String ecdsaVerifyString = (String) jsonObject.get("Signature");
-
-      String publisher = (String) jsonObject.get("Publisher");
-      System.out.println(publisher);
-
-
-      KeyFactory keyFactory = KeyFactory.getInstance("EC");
-      X509EncodedKeySpec keySpec = new X509EncodedKeySpec(encoded);
-      PublicKey publicKey = keyFactory.generatePublic(keySpec);
-      System.out.println(publicKey);
-
-      Signature sign = Signature.getInstance("SHA256withECDSA");
-      sign.initVerify(publicKey);
-      sign.update(url.getBytes("UTF-8"));
-      boolean result = sign.verify(Base64.getDecoder().decode(ecdsaVerifyString));
-      System.out.println(result);
-
-    } catch(Exception e) {
-      System.out.println("Fatal error has occurred.");
-      System.out.println(e);
+    } catch (JSONException e) {
+      System.out.println("A fatal JSONException occurred");
+      e.printStackTrace();
     }
   }
 
