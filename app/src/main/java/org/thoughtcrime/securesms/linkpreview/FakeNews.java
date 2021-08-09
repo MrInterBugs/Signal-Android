@@ -28,6 +28,8 @@ import javax.net.ssl.X509TrustManager;
  * Used to check the news source and weather or not it is impostor content.
  */
 public class FakeNews {
+
+  private public
   /**
    * The main method to be called from the LinkPreviewUtil class.
    *
@@ -71,10 +73,10 @@ public class FakeNews {
 
       System.out.println(publicKey);
 
-      Signature dsa = Signature.getInstance("SHA256withECDSA");
-      dsa.initVerify(publicKey);
-      dsa.update(url.getBytes("UTF-8"));
-      boolean result = dsa.verify(Base64.getDecoder().decode(ecdsaVerifyString));
+      Signature sign = Signature.getInstance("SHA256withECDSA");
+      sign.initVerify(publicKey);
+      sign.update(url.getBytes("UTF-8"));
+      boolean result = sign.verify(Base64.getDecoder().decode(ecdsaVerifyString));
       System.out.println(result);
 
     } catch(Exception e) {
