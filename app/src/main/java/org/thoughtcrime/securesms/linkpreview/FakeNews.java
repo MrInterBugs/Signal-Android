@@ -6,14 +6,21 @@ import androidx.annotation.NonNull;
 
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.FileReader;
 import java.net.URL;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
 import java.security.KeyFactory;
+import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
 import java.security.SecureRandom;
 import java.security.Signature;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.security.interfaces.ECPublicKey;
 import java.security.spec.EncodedKeySpec;
+import java.security.spec.InvalidKeySpecException;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
 import java.util.Scanner;
@@ -29,7 +36,7 @@ import javax.net.ssl.X509TrustManager;
  */
 public class FakeNews {
 
-  private public
+
   /**
    * The main method to be called from the LinkPreviewUtil class.
    *
@@ -38,6 +45,9 @@ public class FakeNews {
   public static void checkNews(@NonNull String url) {
     trustEveryone();
     disableThreads();
+
+    String publicKeyPEM = "MFYwEAYHKoZIzj0CAQYFK4EEAAoDQgAELkQAGX3lFaxZU/2l8NdPp0GK9Cpgi5UaVYfoPEookXzgeWjVlX+tZIp8gqzuXERbPeX5opbXkTaQ/dvvY2UCJg==";
+    byte[] encoded = Base64.getDecoder().decode(publicKeyPEM);
 
     System.out.println("This is important:" + url);
     String jsonUrl = "https://mrinterbugs.uk:5000/?article=" + url;
@@ -59,18 +69,11 @@ public class FakeNews {
 
       String publisher = (String) jsonObject.get("Publisher");
       System.out.println(publisher);
-      String publicUrl = "https://mrinterbugs.uk:5000/publickey?publisher=" + publisher;
 
-      URL finalPublicUrl = new URL(publicUrl);
 
-      scan = new Scanner(finalPublicUrl.openStream());
-      tempResult  = scan.nextLine();
-      scan.close();
-
-      EncodedKeySpec publicKeySpec = new X509EncodedKeySpec(Base64.getDecoder().decode(tempResult));
       KeyFactory keyFactory = KeyFactory.getInstance("EC");
-      PublicKey publicKey = keyFactory.generatePublic(publicKeySpec);
-
+      X509EncodedKeySpec keySpec = new X509EncodedKeySpec(encoded);
+      PublicKey publicKey = keyFactory.generatePublic(keySpec);
       System.out.println(publicKey);
 
       Signature sign = Signature.getInstance("SHA256withECDSA");
