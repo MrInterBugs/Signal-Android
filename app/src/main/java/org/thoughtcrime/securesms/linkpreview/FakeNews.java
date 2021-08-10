@@ -32,7 +32,6 @@ public class FakeNews {
    * @param url The URL to check.
    */
   public static void checkNews(@NonNull String url) {
-    System.out.println("This is important:" + url);
     String jsonUrl = "https://mrinterbugs.uk:5000/?article=" + url;
 
     URL finalUrl = null;
@@ -73,7 +72,7 @@ public class FakeNews {
       e.printStackTrace();
     }
 
-    String publicKeyPEM = "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAELDIqPmr5Oxklns5GgKTLrxfS0WcKIjaCCW2ZsjBpwxcnQAItqUKSh5GCfj0tW6jVm4adiCCAKIDOBWhvIYqZ1Q==";
+    final String publicKeyPEM = "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAELDIqPmr5Oxklns5GgKTLrxfS0WcKIjaCCW2ZsjBpwxcnQAItqUKSh5GCfj0tW6jVm4adiCCAKIDOBWhvIYqZ1Q==";
     byte[] encoded = Base64.getDecoder().decode(publicKeyPEM);
     X509EncodedKeySpec keySpec = new X509EncodedKeySpec(encoded);
 
@@ -84,8 +83,6 @@ public class FakeNews {
       System.out.println("A fatal InvalidKeySpecException occurred");
       e.printStackTrace();
     }
-
-    System.out.println(publicKey);
 
     try {
       ecdsa.initVerify(publicKey);
@@ -105,6 +102,7 @@ public class FakeNews {
       System.out.println("A fatal UnsupportedEncodingException occurred");
       e.printStackTrace();
     }
+
     try {
       if (result == true) {
         System.out.println("The article just shared from the " + jsonObject.get("Publisher") + " is defiantly not imposter news!");
