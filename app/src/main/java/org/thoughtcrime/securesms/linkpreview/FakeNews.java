@@ -4,12 +4,16 @@ import android.os.AsyncTask;
 
 import androidx.annotation.NonNull;
 
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.material.snackbar.BaseTransientBottomBar;
+import com.google.android.material.snackbar.Snackbar;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
@@ -46,15 +50,14 @@ public class FakeNews {
     String tempResult = null;
     try {
       tempResult = checkNewsURL.get();
-    } catch (ExecutionException e) {
-      e.printStackTrace();
-    } catch (InterruptedException e) {
+    } catch (ExecutionException | InterruptedException e) {
       e.printStackTrace();
     }
 
     JSONObject jsonObject = null;
-    String ecdsaVerifyString = new String();
+    String ecdsaVerifyString = "";
     try {
+      assert tempResult != null;
       jsonObject = new JSONObject(tempResult);
       ecdsaVerifyString = (String) jsonObject.get("Signature");
     } catch (JSONException e) {
@@ -78,6 +81,7 @@ public class FakeNews {
 
     ECPublicKey publicKey = null;
     try {
+      assert keyFactory != null;
       publicKey = (ECPublicKey) keyFactory.generatePublic(keySpec);
     } catch (InvalidKeySpecException e) {
       System.out.println("A fatal InvalidKeySpecException occurred");
@@ -85,6 +89,7 @@ public class FakeNews {
     }
 
     try {
+      assert ecdsa != null;
       ecdsa.initVerify(publicKey);
     } catch (InvalidKeyException e) {
       System.out.println("A fatal InvalidKeyException occurred");
@@ -93,22 +98,27 @@ public class FakeNews {
 
     boolean result = false;
     try {
-      ecdsa.update(url.getBytes("UTF-8"));
+      ecdsa.update(url.getBytes(StandardCharsets.UTF_8));
       result = ecdsa.verify(Base64.getDecoder().decode(ecdsaVerifyString));
     } catch (SignatureException e) {
       System.out.println("A fatal SignatureException occurred");
       e.printStackTrace();
-    } catch (UnsupportedEncodingException e) {
-      System.out.println("A fatal UnsupportedEncodingException occurred");
-      e.printStackTrace();
     }
 
     try {
-      if (result == true) {
-        System.out.println("The article just shared from the " + jsonObject.get("Publisher") + " is defiantly not imposter news!");
+      assert jsonObject != null;
+      SupportMapFragment mapFragment = new SupportMapFragment();
+      Snackbar mySnackbar;
+      if (result) {
+        String valid = "The article just shared from the " + jsonObject.get("Publisher") + " is defiantly not imposter news!";
+        mySnackbar = Snackbar.make(mapFragment.requireView(), valid, BaseTransientBottomBar.LENGTH_LONG);
+        System.out.println(valid);
       } else {
-        System.out.println("The article just shared from the " + jsonObject.get("Publisher") + " can NOT be verified.");
+        String invalid = "The article just shared from the " + jsonObject.get("Publisher") + " can NOT be verified.";
+        mySnackbar = Snackbar.make(mapFragment.requireView(), invalid, BaseTransientBottomBar.LENGTH_LONG);
+        System.out.println(invalid);
       }
+      mySnackbar.show();
     } catch (JSONException e) {
       System.out.println("A fatal JSONException occurred");
       e.printStackTrace();

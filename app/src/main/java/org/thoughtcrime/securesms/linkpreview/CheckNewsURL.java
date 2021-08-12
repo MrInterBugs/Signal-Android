@@ -20,7 +20,7 @@ class CheckNewsURL extends AsyncTask<URL, Void, String> {
     protected String doInBackground(URL... urls) {
         trustEveryone();
         Scanner scan = null;
-        String tempResult = new String();
+        StringBuilder tempResult = new StringBuilder();
         try {
             scan = new Scanner(urls[0].openStream());
         } catch (IOException e) {
@@ -28,12 +28,14 @@ class CheckNewsURL extends AsyncTask<URL, Void, String> {
             e.printStackTrace();
         }
 
-        while (scan.hasNext())
+        while (true)
         {
-            tempResult += scan.nextLine();
+            assert scan != null;
+            if (!scan.hasNext()) break;
+            tempResult.append(scan.nextLine());
         }
         scan.close();
-        return tempResult;
+        return tempResult.toString();
     }
 
     /**
