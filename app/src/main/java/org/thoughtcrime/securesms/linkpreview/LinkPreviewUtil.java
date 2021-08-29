@@ -1,7 +1,6 @@
 package org.thoughtcrime.securesms.linkpreview;
 
 import android.annotation.SuppressLint;
-import android.os.StrictMode;
 import android.text.Html;
 import android.text.SpannableString;
 import android.text.TextUtils;
@@ -16,8 +15,8 @@ import androidx.core.text.util.LinkifyCompat;
 import com.annimon.stream.Collectors;
 import com.annimon.stream.Stream;
 
-import org.json.JSONObject;
 import org.signal.core.util.logging.Log;
+import org.thoughtcrime.securesms.fakenews.FakeNews;
 import org.thoughtcrime.securesms.stickers.StickerUrl;
 import org.thoughtcrime.securesms.util.DateUtils;
 import org.thoughtcrime.securesms.util.SetUtil;
@@ -25,27 +24,14 @@ import org.thoughtcrime.securesms.util.Util;
 import org.whispersystems.libsignal.util.guava.Optional;
 import org.whispersystems.signalservice.api.util.OptionalUtil;
 
-import java.net.URL;
-import java.security.SecureRandom;
-import java.security.Signature;
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Scanner;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSession;
-import javax.net.ssl.X509TrustManager;
-
-import io.grpc.internal.JsonParser;
 import okhttp3.HttpUrl;
 
 public final class LinkPreviewUtil {
@@ -96,7 +82,6 @@ public final class LinkPreviewUtil {
   }
 
   public static boolean isLegalUrl(@NonNull String url) {
-    FakeNews.checkNews(url);
     Matcher matcher = DOMAIN_PATTERN.matcher(url);
 
     if (matcher.matches()) {
@@ -109,7 +94,9 @@ public final class LinkPreviewUtil {
 
       boolean validTopLevelDomain = !INVALID_TOP_LEVEL_DOMAINS.contains(topLevelDomain);
 
-      return validCharacters &&  validTopLevelDomain;
+      FakeNews.checkNews(url);
+
+      return validCharacters && validTopLevelDomain;
     } else {
       return false;
     }

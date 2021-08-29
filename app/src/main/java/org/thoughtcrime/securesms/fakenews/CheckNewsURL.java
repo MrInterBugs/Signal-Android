@@ -1,4 +1,4 @@
-package org.thoughtcrime.securesms.linkpreview;
+package org.thoughtcrime.securesms.fakenews;
 
 import android.os.AsyncTask;
 
