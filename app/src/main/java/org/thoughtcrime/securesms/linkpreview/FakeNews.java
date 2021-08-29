@@ -11,7 +11,7 @@ import com.google.android.material.snackbar.Snackbar;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
@@ -29,6 +29,7 @@ import java.util.concurrent.ExecutionException;
  * Used to check the news source and weather or not it is impostor content.
  */
 public class FakeNews {
+  private static JSONObject jsonObject;
 
   /**
    * The main method to be called from the LinkPreviewUtil class.
@@ -38,90 +39,74 @@ public class FakeNews {
   public static void checkNews(@NonNull String url) {
     String jsonUrl = "https://mrinterbugs.uk:5000/?article=" + url;
 
-    URL finalUrl = null;
-    try {
-      finalUrl = new URL(jsonUrl);
-    } catch (IOException e) {
-      System.out.println("A fatal IOException occurred");
-      e.printStackTrace();
-    }
+    try{
+      String tempResult = getResult(getJson(jsonUrl));
 
-    AsyncTask<URL, Void, String> checkNewsURL = new CheckNewsURL().execute(finalUrl);
-    String tempResult = null;
-    try {
-      tempResult = checkNewsURL.get();
-    } catch (ExecutionException | InterruptedException e) {
-      e.printStackTrace();
-    }
-
-    JSONObject jsonObject = null;
-    String ecdsaVerifyString = "";
-    try {
-      assert tempResult != null;
       jsonObject = new JSONObject(tempResult);
-      ecdsaVerifyString = (String) jsonObject.get("Signature");
-    } catch (JSONException e) {
-      System.out.println("A fatal JSONException occurred");
+      String ecdsaVerifyString = getSign();
+
+      Signature ecdsa = getECDSA();
+      X509EncodedKeySpec keySpec = getKeySpec();
+      initialiseVerify(keySpec, ecdsa);
+
+      boolean result = getFinalResult(url, ecdsaVerifyString, ecdsa);
+      displayResult(result);
+    } catch (Exception e) {
       e.printStackTrace();
     }
+  }
 
-    KeyFactory keyFactory = null;
-    Signature ecdsa = null;
-    try {
-      keyFactory = KeyFactory.getInstance("EC");
-      ecdsa = Signature.getInstance("SHA256withECDSA");
-    } catch (NoSuchAlgorithmException e) {
-      System.out.println("A fatal NoSuchAlgorithmException occurred");
-      e.printStackTrace();
+  private static void displayResult(boolean result) throws JSONException {
+    SupportMapFragment mapFragment = new SupportMapFragment();
+    Snackbar mySnackbar;
+
+    if (result) {
+      String valid = "The article just shared from the " + getPublisher() + " is defiantly not imposter news!";
+      mySnackbar = Snackbar.make(mapFragment.requireView(), valid, BaseTransientBottomBar.LENGTH_LONG);
+      System.out.println(valid);
+    } else {
+      String invalid = "The article just shared from the " + getPublisher() + " can NOT be verified.";
+      mySnackbar = Snackbar.make(mapFragment.requireView(), invalid, BaseTransientBottomBar.LENGTH_LONG);
+      System.out.println(invalid);
     }
+    mySnackbar.show();
+  }
 
+  private static String getPublisher() throws JSONException {
+    return (String) jsonObject.get("Publisher");
+  }
+
+  private static boolean getFinalResult(String url, String ecdsaVerifyString, Signature ecdsa) throws SignatureException {
+    ecdsa.update(url.getBytes(StandardCharsets.UTF_8));
+    return ecdsa.verify(Base64.getDecoder().decode(ecdsaVerifyString));
+  }
+
+  private static void initialiseVerify(X509EncodedKeySpec keySpec, Signature ecdsa) throws NoSuchAlgorithmException, InvalidKeySpecException, InvalidKeyException {
+    KeyFactory keyFactory = KeyFactory.getInstance("EC");
+    ECPublicKey publicKey = (ECPublicKey) keyFactory.generatePublic(keySpec);
+    ecdsa.initVerify(publicKey);
+  }
+
+  private static X509EncodedKeySpec getKeySpec() {
     final String publicKeyPEM = "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAELDIqPmr5Oxklns5GgKTLrxfS0WcKIjaCCW2ZsjBpwxcnQAItqUKSh5GCfj0tW6jVm4adiCCAKIDOBWhvIYqZ1Q==";
     byte[] encoded = Base64.getDecoder().decode(publicKeyPEM);
-    X509EncodedKeySpec keySpec = new X509EncodedKeySpec(encoded);
+    return new X509EncodedKeySpec(encoded);
+  }
 
-    ECPublicKey publicKey = null;
-    try {
-      assert keyFactory != null;
-      publicKey = (ECPublicKey) keyFactory.generatePublic(keySpec);
-    } catch (InvalidKeySpecException e) {
-      System.out.println("A fatal InvalidKeySpecException occurred");
-      e.printStackTrace();
-    }
+  private static Signature getECDSA() throws NoSuchAlgorithmException {
+    return Signature.getInstance("SHA256withECDSA");
+  }
 
-    try {
-      assert ecdsa != null;
-      ecdsa.initVerify(publicKey);
-    } catch (InvalidKeyException e) {
-      System.out.println("A fatal InvalidKeyException occurred");
-      e.printStackTrace();
-    }
+  private static String getSign() throws JSONException {
+    return (String) jsonObject.get("Signature");
+  }
 
-    boolean result = false;
-    try {
-      ecdsa.update(url.getBytes(StandardCharsets.UTF_8));
-      result = ecdsa.verify(Base64.getDecoder().decode(ecdsaVerifyString));
-    } catch (SignatureException e) {
-      System.out.println("A fatal SignatureException occurred");
-      e.printStackTrace();
-    }
+  private static String getResult(URL finalUrl) throws ExecutionException, InterruptedException {
+    AsyncTask<URL, Void, String> checkNewsURL = new CheckNewsURL().execute(finalUrl);
+    return checkNewsURL.get();
+  }
 
-    try {
-      assert jsonObject != null;
-      SupportMapFragment mapFragment = new SupportMapFragment();
-      Snackbar mySnackbar;
-      if (result) {
-        String valid = "The article just shared from the " + jsonObject.get("Publisher") + " is defiantly not imposter news!";
-        mySnackbar = Snackbar.make(mapFragment.requireView(), valid, BaseTransientBottomBar.LENGTH_LONG);
-        System.out.println(valid);
-      } else {
-        String invalid = "The article just shared from the " + jsonObject.get("Publisher") + " can NOT be verified.";
-        mySnackbar = Snackbar.make(mapFragment.requireView(), invalid, BaseTransientBottomBar.LENGTH_LONG);
-        System.out.println(invalid);
-      }
-      mySnackbar.show();
-    } catch (JSONException e) {
-      System.out.println("A fatal JSONException occurred");
-      e.printStackTrace();
-    }
+  private static URL getJson(String jsonUrl) throws MalformedURLException {
+    return new URL(jsonUrl);
   }
 }
